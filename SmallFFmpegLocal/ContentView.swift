@@ -150,21 +150,36 @@ struct ContentView: View {
         let sourceFilePath = URL(fileURLWithPath: #file)
         let repoPath = sourceFilePath.deletingLastPathComponent().deletingLastPathComponent()
         let assetsPath = repoPath.appendingPathComponent("assets")
-        videoPath = assetsPath.appendingPathComponent("videos/sample_video.mp4").path
-        logoImagePath = assetsPath.appendingPathComponent("images/logo.png").path
-        frameImagePath = assetsPath.appendingPathComponent("images/frame.png").path
-        imagePath = assetsPath.appendingPathComponent("images/image.png").path
-        image1Path = assetsPath.appendingPathComponent("images/image_1.png").path
-        puzzleImagePath = assetsPath.appendingPathComponent("images/puzzle.png").path
-        assStylePath = assetsPath.appendingPathComponent("aas/transcribed_aas_20250105_164734.ass").path
+        videoPath = assetsPath.appendingPathComponent("videos/trimmed_video_20250109_081718.mp4").path
+        logoImagePath = assetsPath.appendingPathComponent("images/picker_image_2025010929081629_59.jpg").path
+        frameImagePath = assetsPath.appendingPathComponent("images/picker_image_2025010929081629_48.jpg").path
+        imagePath = assetsPath.appendingPathComponent("images/picker_image_2025010930081630_14.jpg").path
+        image1Path = assetsPath.appendingPathComponent("images/puzzle_image_group_2025010907081607_45.png").path
+        //puzzleImagePath = assetsPath.appendingPathComponent("images/puzzle.png").path
+        assStylePath = assetsPath.appendingPathComponent("aas/transcribed_aas_20250109_081723.ass").path
         fontDirectory = assetsPath.appendingPathComponent("font").path
         outputVideoPath = assetsPath.appendingPathComponent("render/result_\(Date().timeIntervalSince1970).mp4").path
         print("Video Path: \(videoPath)")
     }
+    
+    /*
+     -i "/data/user/0/com.notimation.small/files/trimmed_video/trimmed_video_20250109_081718.mp4" -i "/data/user/0/com.notimation.small/files/picker_images/picker_image_2025010929081629_59.jpg" -i "/data/user/0/com.notimation.small/files/picker_images/picker_image_2025010929081629_48.jpg" -i "/data/user/0/com.notimation.small/files/picker_images/picker_image_2025010930081630_14.jpg" -i "/data/user/0/com.notimation.small/files/images/puzzle_image_group_2025010907081607_45.png" -filter_complex "[0:v]subtitles='/data/user/0/com.notimation.small/files/aas/transcribed_aas_20250109_081723.ass'[sub];[sub][1:v]overlay=100:800:enable='between(t,4,5)'[v1]; [v1][2:v]overlay=100:800:enable='between(t,7,8)'[v2]; [v2][3:v]overlay=100:800:enable='between(t,10,11)'[v3]; [v3][4:v]overlay=100:800:enable='between(t,14,16)'[v4]; [v4][out]" -map "[out]" -map 0:a -c:v libx264 -crf 23 -c:a copy "/data/user/0/com.notimation.small/files/rendered/rendered_video_subtitle_20250109_081733.mp4"
+     */
 
 
     private func updateCommand() {
         command = """
+        -i \(videoPath) \
+        -i \(logoImagePath) \
+        -i \(frameImagePath) \
+        -i \(imagePath) \
+        -i \(image1Path) \
+        -filter_complex "[0:v]subtitles='\(assStylePath)'[sub]; \
+        [sub][1:v]overlay=100:800:enable='between(t,2,3)'[v1]; [v1][2:v]overlay=0:0:enable='between(t,3,4)'[v2]; [v2][3:v]overlay=0:0:enable='between(t,4,5)'[v3]; [v3][4:v]overlay=0:0:enable='between(t,5,6)'[out]" -map "[out]" -map 0:a -c:v libx264 -crf 23 -c:a copy \
+        \(outputVideoPath)
+        """
+        
+        /*command = """
         -i \(videoPath) \
         -i \(logoImagePath) \
         -i \(frameImagePath) \
@@ -180,7 +195,7 @@ struct ContentView: View {
         -map "[final]" -map 0:a \
         -c:v libx264 -crf 23 -preset veryfast -c:a copy \
         \(outputVideoPath)
-        """
+        """*/
     }
 
     private func runFFmpegCommand() {
