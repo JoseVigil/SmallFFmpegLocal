@@ -1,0 +1,8 @@
+version: "Apple Swift version 5.7.2 (swiftlang-5.7.2.135.5 clang-1400.0.29.51)"
+options: "6f61cdc4edd678eaa442bfb3aa5ab5e35e8960855a871581755ad56c2cbe8fd3"
+build_start_time: [1738778322, 612486839]
+build_end_time: [1738778323, 66227912]
+inputs:
+  "/Users/josevigil/repos/SmallFFmpegLocal/SmallFFmpegLocal/ContentView.swift": !dirty [1738778259, 273509025]
+  "/Users/josevigil/repos/SmallFFmpegLocal/SmallFFmpegLocal/EnvironmentValues+Command.swift": !dirty [1738469730, 453811168]
+  "/Users/josevigil/repos/SmallFFmpegLocal/SmallFFmpegLocal/SmallFFmpegLocalApp.swift": !dirty [1738691351, 962955951]

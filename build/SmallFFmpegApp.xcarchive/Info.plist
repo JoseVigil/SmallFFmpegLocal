@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ApplicationProperties</key>
+	<dict>
+		<key>ApplicationPath</key>
+		<string>Applications/SmallFFmpegLocal.app</string>
+		<key>Architectures</key>
+		<array>
+			<string>x86_64</string>
+			<string>arm64</string>
+		</array>
+		<key>CFBundleIdentifier</key>
+		<string>com.notimaton.SmallFFmpegLocal</string>
+		<key>CFBundleShortVersionString</key>
+		<string>1.0</string>
+		<key>CFBundleVersion</key>
+		<string>1</string>
+		<key>SigningIdentity</key>
+		<string>Apple Development: Jose Vigil (6247PY5CH9)</string>
+		<key>Team</key>
+		<string>RK8YJ5ZZB6</string>
+	</dict>
+	<key>ArchiveVersion</key>
+	<integer>2</integer>
+	<key>CreationDate</key>
+	<date>2025-02-05T04:59:50Z</date>
+	<key>Name</key>
+	<string>SmallFFmpegApp</string>
+	<key>SchemeName</key>
+	<string>SmallFFmpegApp</string>
+</dict>
+</plist>

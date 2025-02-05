@@ -19,221 +19,155 @@ import AVKit
 import ffmpegkit
 import Foundation
 
+import SwiftUI
+import AppKit // Asegúrate de importar AppKit para usar NSPasteboard
+
 struct ContentView: View {
-    @State private var projectDirectory: String = Bundle.main.bundlePath + "/assets"
-
-    @State private var videoPath: String = ""
-    @State private var logoImagePath: String = ""
-    @State private var frameImagePath: String = ""
-    @State private var imagePath: String = ""
-    @State private var image1Path: String = ""
-    @State private var puzzleImagePath: String = ""
-    @State private var assStylePath: String = ""
-    @State private var fontDirectory: String = ""
-
-    @State private var outputVideoPath: String = {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyyMMdd_HHmmss"
-        let timestamp = dateFormatter.string(from: Date())
-        return Bundle.main.bundlePath + "/../assets/render/result_\(timestamp).mp4"
-    }()
-
-    @State private var command: String = ""
-    @State private var resultMessage: String = ""
     @State private var logOutput: String = ""
-
-    @State private var player: AVPlayer? = nil
+    @State private var player = AVPlayer()
+    @State private var command: String = ""
 
     var body: some View {
-        VStack {
-            HStack {
-                VStack {
-                    Form {
-                        Section(header: Text("Project Directory")) {
-                            Text(projectDirectory)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        }
-
-                        Section(header: Text("Video Input Path")) {
-                            Text(videoPath)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        }
-
-                        Section(header: Text("ASS Style File Path")) {
-                            Text(assStylePath)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        }
-
-                        Section(header: Text("Image Path for Overlay")) {
-                            Text(imagePath)
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        }
-                    }
-                    .frame(maxWidth: getScreenWidth() * 0.4)
-                    .padding(.top)
-
-                    Button(action: {
-                        updateCommand()
-                    }) {
-                        Text("Check Command")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.orange)
-                            .cornerRadius(10)
-                    }
-                    .padding(.top)
-
-                    Button(action: {
-                        runFFmpegCommand()
-                    }) {
-                        Text("Burn Video")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.blue)
-                            .cornerRadius(10)
-                    }
-                    .padding(.top)
-
-                    ScrollView {
-                        TextEditor(text: $command)
-                            .font(.system(size: 14, weight: .medium, design: .monospaced))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(30)
-                    }
+        HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 10) {
+                VideoPlayer(player: player)
+                    .frame(height: 600)
+                
+                Text("FFmpeg Command:")
+                    .font(.headline)
+                
+                TextEditor(text: $command)
+                    .font(.system(size: 12, weight: .medium, design: .monospaced))
                     .frame(height: 200)
-
-                    ScrollView {
-                        TextEditor(text: $logOutput)
-                            .font(.system(size: 12, weight: .medium, design: .monospaced))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.red)
-                            .padding(30)
-                    }
-                    .frame(height: 450)
-                }
-                .frame(maxWidth: 500)
-
-                if !outputVideoPath.isEmpty {
-                    VStack {
-                        Text("Output Video Preview")
-                            .font(.headline)
-                            .padding(.top)
-
-                        if let player = player {
-                            VideoPlayer(player: player)
-                                .frame(maxWidth: 500, maxHeight: 800)
-                                .onAppear {
-                                    player.play()
-                                }
-                        } else {
-                            Rectangle()
-                                .fill(Color.gray.opacity(0.2))
-                                .frame(maxWidth: 500, maxHeight: 800)
-                                .overlay(
-                                    Text("No video loaded")
-                                        .foregroundColor(.black)
-                                )
+                    .border(Color.gray, width: 1)
+                    .padding(5)
+                    .onChange(of: command) { newValue in
+                        // Forzar el cursor al final del texto
+                        DispatchQueue.main.async {
+                            let endPosition = newValue.endIndex
+                            command = newValue
+                            // Mover el cursor al final
+                            if let textView = NSApp.windows.first?.contentView?.subviews.first(where: { $0 is NSTextView }) as? NSTextView {
+                                textView.setSelectedRange(NSRange(location: newValue.count, length: 0))
+                            }
                         }
                     }
-                    .padding(.top)
+                
+                HStack(spacing: 10) {
+                    Button("Run Command") { runFFmpegCommand() }
+                        .buttonStyle(ActionButtonStyle(color: .blue))
+                    Button("Close") { NSApplication.shared.terminate(nil) }
+                        .buttonStyle(ActionButtonStyle(color: .red))
+                }
+            }
+            .frame(width: 600)
+            .padding()
+            
+            ScrollViewReader { proxy in
+                ScrollView {
+                    Text(logOutput)
+                        .font(.system(size: 12, weight: .medium, design: .monospaced))
+                        .padding()
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                        .textSelection(.enabled)
+                        .id("logBottom")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .border(Color.gray, width: 1)
+                .padding(.trailing, 10)
+                .onChange(of: logOutput) { _ in
+                    DispatchQueue.main.async { proxy.scrollTo("logBottom", anchor: .bottom) }
                 }
             }
         }
+        .frame(width: 1500, height: 800)
+        .padding()
         .onAppear {
-            updatePaths()
+            // Cargar y limpiar el contenido del portapapeles al iniciar la aplicación
+            if let clipboardContent = NSPasteboard.general.string(forType: .string) {
+                print("Contenido del portapapeles: [\(clipboardContent)]") // Depuración
+                var cleanedContent = clipboardContent
+                cleanedContent = cleanedContent.replacingOccurrences(of: "\r", with: "")
+                cleanedContent = cleanedContent.replacingOccurrences(of: "\n", with: "")
+                cleanedContent = cleanedContent.trimmingCharacters(in: .whitespacesAndNewlines)
+                command = cleanedContent
+            } else {
+                print("No se pudo cargar el contenido del portapapeles.") // Depuración
+            }
         }
-    }
-
-    private func updatePaths() {
-        let sourceFilePath = URL(fileURLWithPath: #file)
-        let repoPath = sourceFilePath.deletingLastPathComponent().deletingLastPathComponent()
-        let assetsPath = repoPath.appendingPathComponent("assets")
-        videoPath = assetsPath.appendingPathComponent("videos/trimmed_video_20250109_081718.mp4").path
-        logoImagePath = assetsPath.appendingPathComponent("images/picker_image_2025010929081629_59.jpg").path
-        frameImagePath = assetsPath.appendingPathComponent("images/picker_image_2025010929081629_48.jpg").path
-        imagePath = assetsPath.appendingPathComponent("images/picker_image_2025010930081630_14.jpg").path
-        image1Path = assetsPath.appendingPathComponent("images/puzzle_image_group_2025010907081607_45.png").path
-        //puzzleImagePath = assetsPath.appendingPathComponent("images/puzzle.png").path
-        assStylePath = assetsPath.appendingPathComponent("aas/transcribed_aas_20250109_081723.ass").path
-        fontDirectory = assetsPath.appendingPathComponent("font").path
-        outputVideoPath = assetsPath.appendingPathComponent("render/result_\(Date().timeIntervalSince1970).mp4").path
-        print("Video Path: \(videoPath)")
     }
     
-    /*
-     -i "/data/user/0/com.notimation.small/files/trimmed_video/trimmed_video_20250109_081718.mp4" -i "/data/user/0/com.notimation.small/files/picker_images/picker_image_2025010929081629_59.jpg" -i "/data/user/0/com.notimation.small/files/picker_images/picker_image_2025010929081629_48.jpg" -i "/data/user/0/com.notimation.small/files/picker_images/picker_image_2025010930081630_14.jpg" -i "/data/user/0/com.notimation.small/files/images/puzzle_image_group_2025010907081607_45.png" -filter_complex "[0:v]subtitles='/data/user/0/com.notimation.small/files/aas/transcribed_aas_20250109_081723.ass'[sub];[sub][1:v]overlay=100:800:enable='between(t,4,5)'[v1]; [v1][2:v]overlay=100:800:enable='between(t,7,8)'[v2]; [v2][3:v]overlay=100:800:enable='between(t,10,11)'[v3]; [v3][4:v]overlay=100:800:enable='between(t,14,16)'[v4]; [v4][out]" -map "[out]" -map 0:a -c:v libx264 -crf 23 -c:a copy "/data/user/0/com.notimation.small/files/rendered/rendered_video_subtitle_20250109_081733.mp4"
-     */
-
-
-    private func updateCommand() {
-        command = """
-        -i \(videoPath) \
-        -i \(logoImagePath) \
-        -i \(frameImagePath) \
-        -i \(imagePath) \
-        -i \(image1Path) \
-        -filter_complex "[0:v]subtitles='\(assStylePath)'[sub]; \
-        [sub][1:v]overlay=100:800:enable='between(t,2,3)'[v1]; [v1][2:v]overlay=0:0:enable='between(t,3,4)'[v2]; [v2][3:v]overlay=0:0:enable='between(t,4,5)'[v3]; [v3][4:v]overlay=0:0:enable='between(t,5,6)'[out]" -map "[out]" -map 0:a -c:v libx264 -crf 23 -c:a copy \
-        \(outputVideoPath)
-        """
-        
-        /*command = """
-        -i \(videoPath) \
-        -i \(logoImagePath) \
-        -i \(frameImagePath) \
-        -i \(imagePath) \
-        -i \(image1Path) \
-        -i \(puzzleImagePath) \
-        -filter_complex "[0:v]subtitles='\(assStylePath)'[sub]; \
-        [sub][1:v]overlay=W-w-10:H-h-10[logo]; \
-        [logo][2:v]overlay=0:0[frame]; \
-        [frame][5:v]overlay=100:800:enable='between(t,7,10)'[puzzle]; \
-        [puzzle][3:v]overlay=0:0:enable='between(t,5,7)'[img_overlay1]; \
-        [img_overlay1][4:v]overlay=0:0:enable='between(t,10,12)'[final]" \
-        -map "[final]" -map 0:a \
-        -c:v libx264 -crf 23 -preset veryfast -c:a copy \
-        \(outputVideoPath)
-        """*/
+    private func cleanCommand(_ command: String) -> String {
+        var cleanedCommand = command
+        // Eliminar retornos de carro y saltos de línea
+        cleanedCommand = cleanedCommand.replacingOccurrences(of: "\r", with: "")
+        cleanedCommand = cleanedCommand.replacingOccurrences(of: "\n", with: "")
+        // Eliminar espacios al principio y al final
+        cleanedCommand = cleanedCommand.trimmingCharacters(in: .whitespacesAndNewlines)
+        return cleanedCommand
     }
-
+    
     private func runFFmpegCommand() {
         if command.isEmpty {
-            updateCommand()
+            logOutput = "Error: El comando está vacío."
+            return
         }
-
-        let dictionary: NSDictionary = [
-            "name": "consola",
-            "name": "futura"
-        ]
-
-        FFmpegKitConfig.setFontDirectory(fontDirectory, with: dictionary as? [AnyHashable: Any])
-
-        logOutput = ""
-        FFmpegKit.executeAsync(command) { session in
+        
+        let cleanedCommand = cleanCommand(command)
+        logOutput = "Executing command: \(cleanedCommand)\n"
+        let outputVideoPath = extractOutputPath(from: cleanedCommand)
+        
+        // Ejecutar el comando con FFmpegKit
+        FFmpegKit.executeAsync(cleanedCommand) { session in
             let returnCode = session?.getReturnCode()
+            let newLog = session?.getOutput() ?? "No logs available."
             DispatchQueue.main.async {
+                logOutput += "\n\(newLog)"
                 if returnCode?.isValueSuccess() == true {
-                    resultMessage = "Success! Video saved to \(outputVideoPath)"
-                    DispatchQueue.main.async {
-                        self.player = AVPlayer(url: URL(fileURLWithPath: self.outputVideoPath))
-                    }
+                    logOutput += "\n✅ Success! Video saved to \(outputVideoPath)"
+                    
+                    // Configurar el AVPlayer con el video generado
+                    let videoURL = URL(fileURLWithPath: outputVideoPath)
+                    player = AVPlayer(url: videoURL)
+                    
+                    // Asegurarse de que el video se reproduzca correctamente
+                    player.play()
                 } else {
-                    resultMessage = "Error: \(session?.getLogsAsString() ?? "Unknown error")"
+                    logOutput += "\n❌ Error: \(session?.getLogsAsString() ?? "Unknown error")"
                 }
-                logOutput = session?.getOutput() ?? "No logs available."
+            }
+        } withLogCallback: { log in
+            guard let logMessage = log?.getMessage() else { return }
+            DispatchQueue.main.async {
+                logOutput += "\(logMessage)\n"
+            }
+        } withStatisticsCallback: { stats in
+            guard let stats = stats else { return }
+            let progress = "⏳ Progress: \(stats.getTime()) ms, Speed: \(stats.getSpeed())x"
+            DispatchQueue.main.async {
+                logOutput += "\(progress)\n"
             }
         }
     }
-
-    private func getScreenWidth() -> CGFloat {
-        NSScreen.main?.frame.width ?? 800
+    
+    private func extractOutputPath(from command: String) -> String {
+        let components = command.split(separator: " ")
+        if let index = components.lastIndex(of: "-c:a"), index + 1 < components.count {
+            return String(components[index + 2])
+        }
+        return ""
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+struct ActionButtonStyle: ButtonStyle {
+    let color: Color
+    
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding()
+            .background(color)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            .opacity(configuration.isPressed ? 0.8 : 1)
     }
 }

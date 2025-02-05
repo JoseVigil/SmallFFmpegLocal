@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		093307F62D4F186A00E72B31 /* EnvironmentValues+Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 093307F52D4F186A00E72B31 /* EnvironmentValues+Command.swift */; };
+		093307F92D50152200E72B31 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 093307F82D50152100E72B31 /* AVKit.framework */; };
 		099E7D682D015D06008D3DFE /* SmallFFmpegLocalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099E7D672D015D06008D3DFE /* SmallFFmpegLocalApp.swift */; };
 		099E7D6A2D015D06008D3DFE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099E7D692D015D06008D3DFE /* ContentView.swift */; };
 		099E7D6C2D015D09008D3DFE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 099E7D6B2D015D09008D3DFE /* Assets.xcassets */; };
@@ -51,6 +53,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		093307F52D4F186A00E72B31 /* EnvironmentValues+Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Command.swift"; sourceTree = "<group>"; };
+		093307F82D50152100E72B31 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		099E7D642D015D06008D3DFE /* SmallFFmpegLocal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmallFFmpegLocal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		099E7D672D015D06008D3DFE /* SmallFFmpegLocalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallFFmpegLocalApp.swift; sourceTree = "<group>"; };
 		099E7D692D015D06008D3DFE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				093307F92D50152200E72B31 /* AVKit.framework in Frameworks */,
 				099E7D8F2D015EE0008D3DFE /* libavformat.framework in Frameworks */,
 				099E7D952D015EE5008D3DFE /* libswscale.framework in Frameworks */,
 				099E7D782D015E07008D3DFE /* ffmpegkit.framework in Frameworks */,
@@ -86,11 +91,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		093307F72D50152100E72B31 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				093307F82D50152100E72B31 /* AVKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		099E7D5B2D015D06008D3DFE = {
 			isa = PBXGroup;
 			children = (
 				099E7D662D015D06008D3DFE /* SmallFFmpegLocal */,
 				099E7D652D015D06008D3DFE /* Products */,
+				093307F72D50152100E72B31 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,6 +128,7 @@
 				099E7D802D015ECC008D3DFE /* libswresample.framework */,
 				099E7D7B2D015EC8008D3DFE /* libswscale.framework */,
 				099E7D672D015D06008D3DFE /* SmallFFmpegLocalApp.swift */,
+				093307F52D4F186A00E72B31 /* EnvironmentValues+Command.swift */,
 				099E7D692D015D06008D3DFE /* ContentView.swift */,
 				099E7D6B2D015D09008D3DFE /* Assets.xcassets */,
 				099E7D702D015D09008D3DFE /* SmallFFmpegLocal.entitlements */,
@@ -201,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				093307F62D4F186A00E72B31 /* EnvironmentValues+Command.swift in Sources */,
 				099E7D6A2D015D06008D3DFE /* ContentView.swift in Sources */,
 				099E7D682D015D06008D3DFE /* SmallFFmpegLocalApp.swift in Sources */,
 			);

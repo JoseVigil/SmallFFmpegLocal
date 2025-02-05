@@ -1,0 +1,20 @@
+{
+  "source": "/Users/josevigil/repos/SmallFFmpegLocal/SmallFFmpegLocal/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "FFmpeg Command:"
+      },
+      {
+        "comment": "",
+        "key": "Run Command"
+      },
+      {
+        "comment": "",
+        "key": "Close"
+      }
+    ]
+  },
+  "version": 1
+}

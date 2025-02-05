@@ -1,0 +1,79 @@
+{
+  "_buildCommand2" : {
+    "command" : "build",
+    "skipDependencies" : false,
+    "style" : "buildAndRun"
+  },
+  "buildCommand" : "build",
+  "configuredTargets" : [
+    {
+      "guid" : "87b1800f64686027cba5ef44646174655bd3ae3778d1effbdaa7b671762c2fec"
+    }
+  ],
+  "containerPath" : "/Users/josevigil/repos/SmallFFmpegLocal/SmallFFmpegLocal.xcodeproj",
+  "continueBuildingAfterErrors" : false,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "install",
+    "activeArchitecture" : "x86_64",
+    "activeRunDestination" : {
+      "disableOnlyActiveArch" : false,
+      "platform" : "macosx",
+      "sdk" : "macosx13.1",
+      "sdkVariant" : "macos",
+      "supportedArchitectures" : [
+        "x86_64h",
+        "x86_64"
+      ],
+      "targetArchitecture" : "x86_64"
+    },
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex",
+      "buildProductsPath" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Products",
+      "derivedDataPath" : "/Users/josevigil/repos/SmallFFmpegLocal/build",
+      "indexDataStoreFolderPath" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Index.noindex/PrecompiledHeaders",
+      "pchPath" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/PrecompiledHeaders"
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "commandLine" : {
+        "table" : {
+
+        }
+      },
+      "synthesized" : {
+        "table" : {
+          "ACTION" : "install",
+          "ASSET_PACK_FOLDER_PATH" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/InstallationBuildProductsLocation/OnDemandResources",
+          "ASSETCATALOG_COMPILER_FLATTENED_APP_ICON_PATH" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/BuildProductsPath/ProductIcon.png",
+          "BITCODE_GENERATION_MODE" : "bitcode",
+          "COLOR_DIAGNOSTICS" : "YES",
+          "DEPLOYMENT_LOCATION" : "YES",
+          "DEPLOYMENT_POSTPROCESSING" : "YES",
+          "diagnostic_message_length" : "142",
+          "DSTROOT" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/InstallationBuildProductsLocation",
+          "EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE" : "NO",
+          "ENABLE_PREVIEWS" : "NO",
+          "INDEX_ENABLE_DATA_STORE" : "NO",
+          "MESSAGES_APPLICATION_EXTENSION_SUPPORT_FOLDER_PATH" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/BuildProductsPath/MessagesApplicationExtensionSupport",
+          "MESSAGES_APPLICATION_SUPPORT_FOLDER_PATH" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/BuildProductsPath/MessagesApplicationSupport",
+          "OBJROOT" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/IntermediateBuildFilesPath",
+          "SHARED_PRECOMPS_DIR" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/PrecompiledHeaders",
+          "SWIFT_STDLIB_TOOL_UNSIGNED_DESTINATION_DIR" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/BuildProductsPath/SwiftSupport",
+          "SYMROOT" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/BuildProductsPath",
+          "WATCHKIT_2_SUPPORT_FOLDER_PATH" : "/Users/josevigil/repos/SmallFFmpegLocal/build/Build/Intermediates.noindex/ArchiveIntermediates/SmallFFmpegApp/BuildProductsPath/WatchKitSupport2"
+        }
+      }
+    }
+  },
+  "schemeCommand" : "launch",
+  "schemeCommand2" : "archive",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : false,
+  "useImplicitDependencies" : true,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : true
+}
